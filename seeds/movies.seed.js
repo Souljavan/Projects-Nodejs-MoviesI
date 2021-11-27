@@ -1,10 +1,6 @@
-const express = require('express')
-const router = express.Router()
+const mongoose = require('mongoose');
 const Movies = require('../model/movies');
-
-
-router.post('/', (req, res) => {
-    
+const dbConnection = require('../db/db');
 
 
 const movies = [
@@ -46,15 +42,5 @@ const movies = [
   },
 ];
 
-Movies.insertMany(movies).then(function(){
-    console.log("Data inserted")  
-    res.status(201).send("Datos insertados correctamente. ")
-}).catch(function(error){
-    console.log(error)  
-    res.status(500).send("Ha ocurrido un error al insertar los datos. ")     // Failure
-});
-})
-
-module.exports = {
-    router: router
-}
+const MoviesDocuments = movies.map(movies => new Movies(movies));
+console.log(MoviesDocuments)

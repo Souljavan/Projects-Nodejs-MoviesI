@@ -1,14 +1,19 @@
 const express = require('express')
 var server = express();
-require('./db.js');
+const PORT = 3000;
+
+require('./db/db');
 
 
 server.use(express.json())
 
-server.use('/creamovies', require('./handlers/creamovies').router);
 server.use('/movies', require('./handlers/movies').router);
 
-const PORT = 3000;
+server.use('*', (req, res) => {
+  res.status(404).json('Not found')
+});
+
+
 server.listen(PORT, () => {
-    console.log(`Server running in http://localhost:${PORT}`);
+    console.log(`Servidor arrancado en el puerto: ${PORT}`);
   });
