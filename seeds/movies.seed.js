@@ -43,4 +43,20 @@ const movies = [
 ];
 
 const MoviesDocuments = movies.map(movies => new Movies(movies));
-console.log(MoviesDocuments)
+
+dbConnection
+    .then(async() =>{
+        const allMovies = await Movies.find();
+        if (allMovies.length > 0) {
+            await Movies.collection.drop();
+        }
+      })
+    .catch((error) => console.error('Error eliminando colección Usuarios:', error))
+    .then(async () => {
+        await Movies.insertMany(MoviesDocuments)
+    })
+    .catch((error) => console.error('Error al insertar en Usuario:', error))
+    .finally(() => {
+      console.log("Las peliculas fueron insertadas correctamente")
+      mongoose.disconnect()
+    });

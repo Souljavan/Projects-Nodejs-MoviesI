@@ -9,8 +9,16 @@ server.use(express.json())
 
 server.use('/movies', require('./handlers/movies').router);
 
-server.use('*', (req, res) => {
-  res.status(404).json('Not found')
+
+server.use('*', (req, res, next) => {
+  const error = new Error('Ruta no encontrada');
+  error.status = 404;
+  next(error);
+});
+
+server.use((err, req, res, next) => {
+  console.error('[ERROR] Ha ocurrido un error', err.status, err.message);
+return res.status(err.status || 500).json(err.message || 'Ha ocurrido un error en el servidor');
 });
 
 
